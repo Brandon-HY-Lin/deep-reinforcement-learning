@@ -2,7 +2,8 @@ import numpy as np
 import random
 from collections import namedtuple, deque
 
-from qnetwork import QNetwork
+from .qnetwork import QNetwork
+from .replay_buffer import ReplayBuffer
 
 import torch
 import torch.nn.functional as F
@@ -30,7 +31,7 @@ class DQNAgent():
         
         # Q-Network
         self.qnetwork_local = QNetwork(state_size, action_size, seed).to(self.device)
-        self.qnetwork_target = QNetwork(state, action_size, seed).to(self.device)
+        self.qnetwork_target = QNetwork(state_size, action_size, seed).to(self.device)
         self.optimizer = optim.Adam(self.qnetwork_local.parameters(), lr=self.lr)
         
         
@@ -41,16 +42,16 @@ class DQNAgent():
         self.t_step = 0
         
         
-    def step(self, state, action, reward, next_sate, done):
+    def step(self, state, action, reward, next_state, done):
         
         self.memory.add(state, action, reward, next_state, done)
         
-        # Learn every UPDATE_EVERY teim steps.
+        # Learn every UPDATE_EVERY time steps.
         self.t_step = (self.t_step + 1) % self.update_every 
         
         if self.t_step == 0:
             
-            # If ennough samples are available in memory, get random subset and learn
+            # If enough samples are available in memory, get random subset and learn
             if len(self.memory) > self.batch_size:
                 experiences = self.memory.sample()
                 self.learn(experiences, self.gamma)
@@ -58,7 +59,7 @@ class DQNAgent():
                 
     def act(self, state, eps=0.):
         
-        state = torch.from_numpy(state).float().unsqueeze(0).to(device)
+        state = torch.from_numpy(state).float().unsqueeze(0).to(self.device)
         
         self.qnetwork_local.eval()
         with torch.no_grad():
@@ -67,25 +68,25 @@ class DQNAgent():
         self.qnetwork_local.train()
         
         
-        # epsilon-greedy
+        # Epsilon-greedy action selection
         if random.random() > eps:
             return np.argmax(action_values.cpu().data.numpy())
         else:
-            return random.choice(np.arnage(self.action_size))
+            return random.choice(np.arange(self.action_size))
         
         
     def learn(self, experiences, gamma):
         
-        state, actions, reward, next_states, dones = experiences
+        states, actions, rewards, next_states, dones = experiences
         
-        Q_targets_next = self.nqnetwork_target(next_states).detach().max(1)[0].unsqueeze(1)
+        Q_targets_next = self.qnetwork_target(next_states).detach().max(1)[0].unsqueeze(1)
         Q_targets = rewards + (gamma * Q_targets_next * (1 - dones))
                                
         Q_expected = self.qnetwork_local(states).gather(1, actions)
                                
         loss = F.mse_loss(Q_expected, Q_targets)
         
-        self.optimizer.zeros_grad()
+        self.optimizer.zero_grad()
         loss.backward()
         
         self.optimizer.step()

@@ -1,15 +1,18 @@
 from unityagents import UnityEnvironment
 
 class Task():
-    def __init__(self, file_name="/data/Banana_Linux_NoVis/Banana.x86_64")
+    def __init__(self, unity_env):
         '''
         Params:
         ======
             file_name: file of UnitEnvironment
         '''
-        self.file_name = file_name
-        self.env = UnityEnvironment(file_name=file_name)
+        self.env = unity_env
         self.brain_name = self.env.brain_names[0]
+        self.brain = self.env.brains[self.brain_name]
+        
+        self.action_size = self.env.brains[self.brain_name].vector_action_space_size
+        self.state_size = self.env.brains[self.brain_name].vector_observation_space_size
         
         
     def step(self, action):
@@ -23,8 +26,20 @@ class Task():
         
         
     def reset(self, train_mode=True):
-        env_info = env.reset(train_mode=train_mode)[self.brain_name]
+        env_info = self.env.reset(train_mode=train_mode)[self.brain_name]
         state = env_info.vector_observations[0]   # get the current state
         
         return state
+    
+    
+    def close(self):
+        self.env.close()
+        
+        
+    def get_action_size(self):
+        return self.brain.vector_action_space_size
+    
+    
+    def get_state_size(self):
+        return self.brain.vector_observation_space_size
         
