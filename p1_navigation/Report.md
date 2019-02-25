@@ -1,4 +1,6 @@
-[img_comparision_reward_13]: ./figures/comparison_reward_13.png
+[img_comparision_reward_13]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p1_navigation/figues/comparison_reward_13.png "Comparison between DQN, DDQN, Deuling DDQN"
+
+
 
 # Project 1: Navigation
 
@@ -25,7 +27,7 @@ This is a variant of DDQN. The framework is similar to DDQN except that the neur
 # 3. Results
 The results of how fast each framework can achieve +13 reward is shown in the following table. The DDQN framework has fewest episodes which is 261. This is pretty surprising that dueling DDQN, the more advanced variant framework, is not the best one. I tried to tweak more parameters in dueling DDQN but it doesn't work well.
 
-[img_comparision_reward_13]
+![comparison reward 13][img_comparision_reward_13]
 
 **Framework**|**Arch of Neural Networks**|**Hyper-parameters: decay rate of epsilon**|**Hyper-parameters: min of epsilon**|**#Episode to achieve +13 reward**
 :-----:|:-----:|:-----:|:-----:|:-----:
