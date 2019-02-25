@@ -28,7 +28,7 @@ class Dueling_QNetwork(nn.Module):
         x_v = F.relu(self.fc2_v(x_v))
         x_v = self.fc3_v(x_v)
 
-        x = x_v + x_a
+        x = x_v + x_a - torch.mean(x_a)
         
         return x
         
