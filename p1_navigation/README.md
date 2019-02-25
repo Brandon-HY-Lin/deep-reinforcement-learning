@@ -41,6 +41,12 @@ Follow the instructions in `Navigation.ipynb` to get started with training your 
 ### Layout of Repository
 .
 ├── agents/                        => Codes of agent and replay buffer
+│   ├── ddqn_agent.py              => Agent of DDQN
+│   ├── dqn_agent.py               => Agent of DQN
+│   ├── dueling_ddqn_agent.py      => Agent of dueling DDQN
+│   ├── dueling_qnetwork.py        => Neural network for dueling DDQN
+│   ├── qnetwork.py                => Neural network for DQN and DDQN
+│   └── replay_buffer.py           => replay buffer
 ├── logs/                          => Log files
 ├── models/                        => Saved checkpoints of models
 ├── Navigation_Double_DQN.ipynb    => Expriment of Double DQN  
