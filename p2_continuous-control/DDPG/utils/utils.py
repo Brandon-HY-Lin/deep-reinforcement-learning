@@ -31,3 +31,16 @@ def plot_scores(score_parcels, size_window=100, show_origin=False, alpha=1.0):
     plt.xlabel('Episode #')            
     plt.show()
                      
+
+def save_logs(scores, path_logs, version):
+    path_logs = dir_log + 'log_{}.pickle'.format(version)
+    
+    with open(path_logs, 'wb') as f:
+        pickle.dump(scores, path_logs)
+        
+
+def save_agent(model_dict, dir_checkpoints, version):
+    for model, prefix_model_name in model_dict:
+        path_model = dir_checkpoints + 'checkpoint_{}_{}.pth'.format(prefix_model_name, version)
+        
+        torch.save(model.parameters(), path_model)
