@@ -1,5 +1,6 @@
 import random
-from ..models import DDPGActor, DDPGCritic
+from ..models.ddpg_actor import DDPGActor
+from ..models.ddpg_critic import DDPGCritic
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
