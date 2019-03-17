@@ -1,5 +1,8 @@
 import random
 from collections import namedtuple, deque
+import torch
+import numpy as np
+
 
 class ReplayBuffer:
     """Fixed-size buffer to store experience tuples."""
