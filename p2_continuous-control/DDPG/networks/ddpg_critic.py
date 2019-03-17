@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from network_utils import hidden_init
+from networks.network_utils import hidden_init
 
 class DDPGCritic(nn.Module):
     def __init__(self, state_size, action_size, seed, fcs1_units=400, fc2_units=300):

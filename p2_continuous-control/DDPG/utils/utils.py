@@ -1,6 +1,10 @@
 import numpy as np
 import pickle
 from collections import namedtuple
+import matplotlib.pyplot as plt
+
+import torch
+
 
 ScoreParcels = namedtuple('ScoreParcels', ['comment', 'path_scores', 'color'])
 
@@ -32,15 +36,21 @@ def plot_scores(score_parcels, size_window=100, show_origin=False, alpha=1.0):
     plt.show()
                      
 
-def save_logs(scores, path_logs, version):
-    path_logs = dir_log + 'log_{}.pickle'.format(version)
+def log_path_name(dir_logs, version):
+    return dir_logs + 'log_{}.pickle'.format(version)
+
+
+def save_logs(scores, dir_logs, version):
+    path_logs = log_path_name(dir_logs, version)
     
     with open(path_logs, 'wb') as f:
-        pickle.dump(scores, path_logs)
+        pickle.dump(scores, f)
         
 
-def save_agent(model_dict, dir_checkpoints, version):
-    for model, prefix_model_name in model_dict:
+def save_agent(model_dicts, dir_checkpoints, version):
+    for prefix_model_name, model in model_dicts.items():
         path_model = dir_checkpoints + 'checkpoint_{}_{}.pth'.format(prefix_model_name, version)
         
-        torch.save(model.parameters(), path_model)
+        torch.save(model.state_dict(), path_model)
+        
+        
