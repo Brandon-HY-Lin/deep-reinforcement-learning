@@ -8,13 +8,15 @@ import numpy as np
 from networks.ddpg_actor import DDPGActor
 from networks.ddpg_critic import DDPGCritic
 from agents.base_agent import BaseAgent
-from agents.ounoise import OUNoise
+# from agents.ounoise import OUNoise
+from agents.ounoise_multivariate import OUNoiseMultivariate
 from agents.replay_buffer import ReplayBuffer
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 class DDPGAgent(BaseAgent):
-    def __init__(self, state_size, action_size, random_seed,
+    def __init__(self, state_size, action_size, num_agents, random_seed,
                  lr_actor=1e-4, lr_critic=1e-3, 
+                 fc1_units=400, fc2_units=300,
                  buffer_size=int(1e5), batch_size=128,
                  gamma=0.99, tau=1e-3):
                  
@@ -29,18 +31,19 @@ class DDPGAgent(BaseAgent):
         super().__init__()
         
         self.state_size = state_size
+        self.num_agents = num_agents
         self.action_size = action_size
         self.seed = random.seed(random_seed)
         
         # Actor Network (w/ Target Network)
-        self.actor_local = DDPGActor(state_size, action_size, random_seed).to(device)
-        self.actor_target = DDPGActor(state_size, action_size, random_seed).to(device)
+        self.actor_local = DDPGActor(state_size, action_size, random_seed, fc1_units=fc1_units, fc2_units=fc2_units).to(device)
+        self.actor_target = DDPGActor(state_size, action_size, random_seed, fc1_units=fc1_units, fc2_units=fc2_units).to(device)
         
         self.actor_optimizer = optim.Adam(self.actor_local.parameters(), lr=lr_actor)
         
         # Critic Network (w/ Target Network)
-        self.critic_local = DDPGCritic(state_size, action_size, random_seed).to(device)
-        self.critic_target = DDPGCritic(state_size, action_size, random_seed).to(device)
+        self.critic_local = DDPGCritic(state_size, action_size, random_seed, fcs1_units=fc1_units, fc2_units=fc2_units).to(device)
+        self.critic_target = DDPGCritic(state_size, action_size, random_seed, fcs1_units=fc1_units, fc2_units=fc2_units).to(device)
         
         self.critic_optimizer = optim.Adam(self.critic_local.parameters(), lr=lr_critic)
         
@@ -49,8 +52,12 @@ class DDPGAgent(BaseAgent):
         self.exploration_mu = 0
         self.exploration_theta = 0.15 # (Timothy Lillicrap, 2016)
         self.exploration_sigma = 0.2 # (Timothy Lillicrap, 2016)
-        self.noise = OUNoise(action_size, self.exploration_mu, self.exploration_theta, self.exploration_sigma)
-        
+#         self.noise = OUNoise(action_size, self.exploration_mu, self.exploration_theta, self.exploration_sigma)
+        self.noise = OUNoiseMultivariate((num_agents, action_size), random_seed, 
+                                         mu=self.exploration_mu, 
+                                         theta=self.exploration_theta, 
+                                         sigma=self.exploration_sigma)
+    
         # Replay memory
         self.memory = ReplayBuffer(action_size, buffer_size, batch_size, random_seed, device)
         
@@ -63,15 +70,17 @@ class DDPGAgent(BaseAgent):
         self.batch_size = batch_size     
         
         
-    def step(self, state, action, reward, next_state, done):
+    def step(self, states, actions, rewards, next_states, dones):
         """Save experience in replay memory, and use random sample from buffer to learn."""
         # Save experience / reward
-        self.memory.add(state, action, reward, next_state, done)
+        for i in range(self.num_agents):
+            self.memory.add(states[i,:], actions[i,:], rewards[i], next_states[i,:], dones[i])
+        #self.memory.add_batch(states, actions, rewards, next_states, dones)
         
         # Learn, if enough samples are available in memory
         if len(self.memory) > self.batch_size:
             experiences = self.memory.sample()
-            self.learn(experiences,self.gamma)
+            self.learn(experiences, self.gamma)
        
         
     def act(self, state, add_noise=True):

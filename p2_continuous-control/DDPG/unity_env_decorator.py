@@ -9,23 +9,27 @@ class UnityEnvDecorator():
         self.action_size = self.env.brains[self.brain_name].vector_action_space_size
         self.state_size = self.env.brains[self.brain_name].vector_observation_space_size
         
+        env_info = self.env.reset(train_mode=True)[self.brain_name]
+        states = env_info.vector_observations
+        # get number of agents
+        self.num_agents = len(env_info.agents)
     
 
     def step(self, action):
         env_info = self.env.step(action)[self.brain_name]
         
-        next_state = env_info.vector_observations[0]
-        reward = env_info.rewards[0]
-        done = env_info.local_done[0]
+        next_states = env_info.vector_observations
+        rewards = env_info.rewards
+        dones = env_info.local_done
         
-        return next_state, reward, done, env_info
+        return next_states, rewards, dones, env_info
 
 
     def reset(self, train_mode=True):
         env_info = self.env.reset(train_mode=train_mode)[self.brain_name]
-        state = env_info.vector_observations[0]
+        states = env_info.vector_observations
         
-        return state
+        return states
     
     
     def close(self):
