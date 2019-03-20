@@ -8,7 +8,7 @@
 
 [img_ddpg_version_5]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p2_continuous-control/DDPG/pictures/ddpg_version_5.png "Score of Version 5"
 
-[img_ddpg_version_6]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p2_continuous-control/DDPG/pictures/ddpg_version_2.png "Score of Version 6"
+[img_ddpg_version_6]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p2_continuous-control/DDPG/pictures/ddpg_version_6.png "Score of Version 6"
 
 
 [img_ddpg_version_5_and_version_6]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p2_continuous-control/DDPG/pictures/ddpg_version_5_to_6_raw_data.png "Comparison between Version 5 and Version 6"
