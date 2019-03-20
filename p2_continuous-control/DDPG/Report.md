@@ -13,6 +13,8 @@
 
 [img_ddpg_version_5_and_version_6]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p2_continuous-control/DDPG/pictures/ddpg_version_5_to_6_raw_data.png "Comparison between Version 5 and Version 6"
 
+[img_ddpg_version_1_to_verion_6]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p2_continuous-control/DDPG/pictures/ddpg_version_1_to_6.png "Comparison among version 1 to version 6"
+
 [ounoise_sigma_02_theta_015]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p2_continuous-control/DDPG/pictures/ounoise_mu_0_sigma_02_theta_015.png "OUnoise"
 
 
@@ -99,3 +101,26 @@ When taking a close look at version 5 and version 6 as shown below, version 6 ji
 
 ![Comparison between version 5 and version 6][img_ddpg_version_5_and_version_6]
 
+
+
+# Results
+
+The results of 6 versions are shown below. The version 6 combined all the approches among version 2 and version 5, and thus achieve the best result in score and stability. 
+
+![Comparison of 6 versions][img_ddpg_version_1_to_verion_6]
+
+The approches applied by version 6 are summarized as below:
+
+1. Apply gradient clipping.
+2. Train the netural networks 10 times for every 20 time steps.
+3. Decrease the noise for every time step.
+3. Apply batch normalization.
+4. Replace random experience replay by PER.
+
+
+# Conclusion
+In this work, several techniques are adopted into DDPG algorithm including batch normalization and PER. The average score is 38.80 at episode 400. The convergence speed is fast and can achieve average reward of +30 at episode 24. The instability issue are insignificant compared to other versions in this project.
+
+
+# Future Work.
+* Implement [D4PG (Distributed Distributional Deterministic Policy Gradients)](https://arxiv.org/pdf/1804.08617.pdf)
