@@ -1,0 +1,6 @@
+# Abstract
+
+# Introduction
+
+### Environment
+By looking at the observation spaces of each agent, it's easy to observe the agent can receive poistions in the exact cooridante. Before implementing MADDPG, I guess DDPG is better than MADDPG.
