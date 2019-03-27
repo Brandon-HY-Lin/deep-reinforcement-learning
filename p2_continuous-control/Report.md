@@ -90,7 +90,7 @@ The average score exceed +30 at episode 60 and it reaches 37.77 at episode 400 w
 
 
 ### Version 6:
-According to [D4PG](https://arxiv.org/pdf/1804.08617.pdf), replacing random experience buffer with PER (prioritized experience buffer) can boost the performance of DDPG. This version implement PER and add importance sampling to critic function (Q-function)
+According to [D4PG](https://arxiv.org/pdf/1804.08617.pdf), replacing random experience buffer with PER (prioritized experience buffer) can boost the performance of DDPG. This version implement PER and add importance sampling to critic function (Q-function). The implementation of PER is a variant of [this code](https://github.com/SIakovlev/Navigation)
 
 ![Score of Version 6][img_ddpg_version_6]
 
