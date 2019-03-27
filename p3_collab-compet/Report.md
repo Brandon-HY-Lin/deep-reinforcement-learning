@@ -3,7 +3,7 @@
 # Introduction
 
 ### Environment
-By looking at the observation spaces of each agent shown below, it's easy to see that values of field 20 of agent_0 and agent_1 are complement.
+* By looking at the observation spaces of each agent shown below, it's easy to see that values of field 20 of agent_0 and agent_1 are complement.
 
 ---
 ```
@@ -26,3 +26,5 @@ Complement fields:
 ---
 
 Before implementing MADDPG, I guess DDPG is better than MADDPG.
+
+* Conjecture: let 1 one agent be a quick learner and the other be a slow learner. It might increase scores.
