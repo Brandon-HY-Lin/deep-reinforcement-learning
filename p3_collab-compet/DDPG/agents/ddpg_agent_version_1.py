@@ -22,7 +22,8 @@ class DDPGAgentVersion1(BaseAgent):
                  fc1_units=128, fc2_units=128,
                  buffer_size=int(1e6), batch_size=50, 
                  gamma=0.95, tau=1e-2,
-                 learn_period=100, learn_sampling_num=50):
+                 learn_period=100, learn_sampling_num=50,
+                adam_critic_weight_decay=0.0, name=None):
 
 
 
@@ -35,11 +36,10 @@ class DDPGAgentVersion1(BaseAgent):
         """
         super().__init__()
         self.state_size = state_size
-        self.num_agents = num_agents
         self.action_size = action_size
         self.seed = random.seed(random_seed)
 
-        self.max_norm = max_norm
+#         self.max_norm = max_norm
         self.learn_period = learn_period
         self.learn_sampling_num = learn_sampling_num
         
@@ -79,6 +79,8 @@ class DDPGAgentVersion1(BaseAgent):
         self.tau = tau
         
         self.batch_size = batch_size
+        
+        self.name = name
         
         self.time_step = 0
         
@@ -178,5 +180,5 @@ class DDPGAgentVersion1(BaseAgent):
 
             
     def model_dicts(self):
-        return {'actor': self.actor_target,
-                'critic': self.critic_target}
+        return {'agent_{}_actor'.format(self.name) : self.actor_target,
+                'agent_{}_critic'.format(self.name) : self.critic_target}
