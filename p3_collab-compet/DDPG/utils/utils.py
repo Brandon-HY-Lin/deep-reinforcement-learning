@@ -8,7 +8,7 @@ import torch
 
 ScoreParcels = namedtuple('ScoreParcels', ['comment', 'path_scores', 'color'])
 
-def plot_scores(score_parcels, size_window=100, show_origin=False, alpha=1.0):
+def plot_scores(score_parcels, size_window=100, show_origin=False, alpha=1.0, baseline=0.5):
     
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -28,7 +28,7 @@ def plot_scores(score_parcels, size_window=100, show_origin=False, alpha=1.0):
                 
                 
     # draw horizontal line
-    plt.plot(np.arange(len(scores)), np.ones(len(scores)) * 30.0, 'k--')
+    plt.plot(np.arange(len(scores)), np.ones(len(scores)) * baseline, 'k--')
     
     plt.legend()
     plt.ylabel('Score')
@@ -38,7 +38,8 @@ def plot_scores(score_parcels, size_window=100, show_origin=False, alpha=1.0):
 
 def plot_scores_v2(score_parcels, size_window=100, max_len=None, 
                    show_origin=False, alpha=1.0, mode='valid', 
-                   draw_vertical=False, show_episode_on_label=False):
+                   draw_vertical=False, show_episode_on_label=False,
+                  baseline=0.5):
     
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -87,7 +88,7 @@ def plot_scores_v2(score_parcels, size_window=100, max_len=None,
                 
                 
     # draw horizontal line
-    plt.plot(np.arange(len(scores)), np.ones(len(scores)) * 30.0, 'k--')
+    plt.plot(np.arange(len(scores)), np.ones(len(scores)) * baseline, 'k--')
     
     
     

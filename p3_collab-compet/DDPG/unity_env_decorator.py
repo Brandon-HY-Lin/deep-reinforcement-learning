@@ -1,4 +1,5 @@
 from unityagents import UnityEnvironment
+import pdb
 
 class UnityEnvDecorator():
     def __init__(self, unity_environment):
@@ -16,6 +17,7 @@ class UnityEnvDecorator():
     
 
     def step(self, action):
+#         pdb.set_trace()
         env_info = self.env.step(action)[self.brain_name]
         
         next_states = env_info.vector_observations

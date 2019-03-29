@@ -2,7 +2,7 @@ class BaseAgent():
     def __init__(self):
         pass
     
-    def act(self, states):
+    def act(self, states, add_noise=True):
         raise NotImplementedError('Error: In BaseAgent(), act() is not implemented')
         
     

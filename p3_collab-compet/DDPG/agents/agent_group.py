@@ -11,11 +11,16 @@ class AgentGroup(BaseAgent):
         self.agent_list = agent_list
         
         
-    def act(self, states):
+    def act(self, states, add_noise=True):
         combined_actions = None
         
         for agent, state in zip(self.agent_list, states):
-            action = np.expand_dims(agent.act(state), axis=0)
+            
+#             pdb.set_trace()
+            
+            state = np.expand_dims(state, axis=0)
+#             action = np.expand_dims(agent.act(state, add_noise), axis=0)
+            action = agent.act(state, add_noise)
             
             if combined_actions is None:
                 combined_actions = action
