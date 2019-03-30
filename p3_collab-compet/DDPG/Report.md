@@ -19,6 +19,8 @@
 
 [img_ddpg_version_1_to_verion_5]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p3_collab-compet/DDPG/pictures/ddpg_version_1_to_version_5.png "Comparison among version 1 to version 5"
 
+[img_ddpg_version_1_to_verion_7]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p3_collab-compet/DDPG/pictures/ddpg_version_1_to_version_7.png "Comparison among version 1 to version 7"
+
 
 # Abstract
 
@@ -48,6 +50,7 @@ Parameters:
   * theta = 0.15
 
 ![Score of Version 1][img_ddpg_version_1]
+
 The translucent line shows the raw score of every episode. The solid line shows the average score with window=100.
 
 
@@ -61,6 +64,7 @@ Parameters:
   * theta = 0.15
   
 ![Score of Version 2][img_ddpg_version_2]
+
 The translucent line shows the raw score of every episode. The solid line shows the average score with window=100.
 
 
@@ -74,6 +78,7 @@ Parameters:
     
 
 ![Score of Version 3][img_ddpg_version_3]
+
 The translucent line shows the raw score of every episode. The solid line shows the average score with window=100.
 
 
@@ -82,6 +87,7 @@ Owning to the impression in [project 2](https://github.com/Brandon-HY-Lin/deep-r
 
 
 ![Score of Version 4][img_ddpg_version_4]
+
 The translucent line shows the raw score of every episode. The solid line shows the average score with window=100.
 
 
@@ -96,6 +102,7 @@ Parameters:
 
 
 ![Score of Version 5][img_ddpg_version_5]
+
 The translucent line shows the raw score of every episode. The solid line shows the average score with window=100.
 
 
@@ -115,17 +122,37 @@ Parameters:
     
     
 ![Score of Version 6][img_ddpg_version_6]
+
 The translucent line shows the raw score of every episode. The solid line shows the average score with window=100.
 
     
 ### Version 7
-Recall that batch normalization is not rolled back between version 4 and version 6. In order to clarify the impact of batch normalization, batch normalization is removed in this version.
+Recall that batch normalization is not rolled back between version 4 and version 6. In order to clarify the impact of batch normalization, batch normalization is removed in this version. The highest score is 5.2 and average score passes 0.5 at episode 448.
 
 
 ![Score of Version 7][img_ddpg_version_7]
-The translucent line shows the raw score of every episode. The solid line shows the average score with window=100. The highest score is 5.2 and average score passes 0.5 at episode 448.
+
+The translucent line shows the raw score of every episode. The solid line shows the average score with window=100. 
 
 
 
-# Appendix
-### Design Patterns of Python Codes
+# Results
+In section Approach, 7 versions are proposed. The result of 7 versions is listed below, to be concise, the raw data are removed. Due to the training time, there are only 1,000 episodes in version 6 and 7.
+
+![Scores of all versions][img_ddpg_version_1_to_verion_7]
+
+
+A close look between version 1 and version 5 is listed below. Note that version 4 and version 5 are inferior to version 3 because of batch normalization.
+
+![Scores of first 5 versions][img_ddpg_version_1_to_verion_5]
+
+
+To take a deep look at the impact of batch normalization, I plot the scores of version 6 and verion 7 below. Both versions achieve socres above 5.0, but version 6 (w/ BN) has higher average score around 810 episode.
+
+![Scores of version 6 and version 7][img_ddpg_version_6_and_version_7_with_raw_data]
+
+The translucent line shows the raw score of every episode. The solid line shows the average score with window=100.
+
+
+# Conclusion
+In this work, two high performance DDPG approaches are implement, i.e. version 6 and version 7. They all utilize PER to boost the training speed and can achieve high socre of +5.0. Furthermore, by applying batch normalization can get higher average score.
