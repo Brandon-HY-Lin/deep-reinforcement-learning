@@ -2,7 +2,7 @@
 
 [img_ddpg_version_2]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p3_collab-compet/DDPG/pictures/ddpg_version_2.png "Score of Version 2"
 
-[img_ddpg_version_3]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p3_collab-compet/DDPG/pictures/ddpg_version_1.png "Score of Version 3"
+[img_ddpg_version_3]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p3_collab-compet/DDPG/pictures/ddpg_version_3.png "Score of Version 3"
 
 [img_ddpg_version_4]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p3_collab-compet/DDPG/pictures/ddpg_version_4.png "Score of Version 4"
 
