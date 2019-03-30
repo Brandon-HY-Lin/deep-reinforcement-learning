@@ -39,7 +39,7 @@ def plot_scores(score_parcels, size_window=100, show_origin=False, alpha=1.0, ba
 def plot_scores_v2(score_parcels, size_window=100, max_len=None, 
                    show_origin=False, alpha=1.0, mode='valid', 
                    draw_vertical=False, show_episode_on_label=False,
-                  baseline=0.5):
+                  baseline=0.5, margin=200):
     
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -55,21 +55,19 @@ def plot_scores_v2(score_parcels, size_window=100, max_len=None,
             
             moving_average = np.convolve(scores, np.ones((size_window,)) / size_window, mode=mode)
         
-            x_30 = None
+            x_baseline = None
             for index, s in enumerate(moving_average):
-                if s >= 30.0:
-                    x_30 = index
+                if s >= baseline:
+                    x_baseline = index
                     break
                     
-            if show_episode_on_label is True and x_30 is not None:
-                comment = comment + ', passed at ep #{}'.format(x_30)
+            if show_episode_on_label is True and x_baseline is not None:
+                comment = comment + ', passed at ep #{}'.format(x_baseline)
                         
             # draw vertical line that shows the first point is greater than 30.0
             if draw_vertical is True:
-               
-                        
-                len_vert = int(31)
-                plt.plot(x_30 * np.ones(len_vert), np.arange(len_vert), 
+                len_vert = int(max(1, baseline))
+                plt.plot(x_baseline * np.ones(len_vert), np.arange(len_vert), 
                          color=color, alpha=alpha*0.2)
                 
                 
@@ -92,7 +90,7 @@ def plot_scores_v2(score_parcels, size_window=100, max_len=None,
     
     
     
-    ax.set_xlim(0, max_len+200)
+    ax.set_xlim(0, max_len+margin)
     plt.legend()
     plt.ylabel('Score')
     plt.xlabel('Episode #')            
