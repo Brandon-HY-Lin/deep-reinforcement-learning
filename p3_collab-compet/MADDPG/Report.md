@@ -14,6 +14,7 @@ By looking at the highlighted text in MADDPG algorithm shown below, the major di
 
 
 Furthermore, the diagram shown below also illustrate this subtile difference. For N agents, there are N policy-networks, N Q-networks, and only 1 replay buffer.
+
 ![Diagram of MADDPG][maddpg_digram]
 
 *Diagram of MADDPG*
