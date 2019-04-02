@@ -80,7 +80,7 @@ class AgentGroup(BaseAgent):
             for _ in range(self.learn_sampling_num):
                 for agent in self.agent_list:
 
-                    pdb.set_trace()
+#                     pdb.set_trace()
                     
                     # Note: experiences.shape[0] = batch_size
                     experiences = self.memory.sample()

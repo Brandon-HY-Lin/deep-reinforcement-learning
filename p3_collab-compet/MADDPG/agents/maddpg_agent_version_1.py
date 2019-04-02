@@ -61,7 +61,7 @@ class MADDPGAgentVersion1(BaseAgent):
         self.max_norm = max_norm
         self.epsilon = epsilon_start
         self.epsilon_end = epsilon_end
-        self.epssilon_decay = epsilon_decay
+        self.epsilon_decay = epsilon_decay
         
         # Actor Network (w/ Target Network)
         self.actor_local = MADDPGActorVersion1(state_size, action_size, random_seed, 
@@ -141,12 +141,14 @@ class MADDPGAgentVersion1(BaseAgent):
         
         for i, agent in enumerate(self.game):
             # get next_state_i of agent_i
-            n_state = next_states[i*self.state_size: (i+1)*self.state_size]
+            n_state = next_states[:, i*self.state_size: (i+1)*self.state_size]
+            
+#             pdb.set_trace()
             
             # predict next_action and append it to actionQuery.actions
             agent.query(n_state, q)
             
-        return q.actions
+        return q.next_actions
     
     
     def query(self, next_state, q):
@@ -160,8 +162,9 @@ class MADDPGAgentVersion1(BaseAgent):
         if q.next_actions is None:
             q.next_actions = next_action
         else:
-            q.next_actions = torch.cat((q.next_actions, next_action), dim=0)    
-            q.next_actions = q.next_actions.flatten()
+            q.next_actions = torch.cat((q.next_actions, next_action), dim=1)    
+            
+#             pdb.set_trace()
 
 
     def learn(self, states, actions, rewards, next_states, dones):
@@ -200,11 +203,11 @@ class MADDPGAgentVersion1(BaseAgent):
         # loss fuction = Q_target(TD 1-step boostrapping) - Q_local(current)      
         next_actions = self.forward_all(next_states)
 
-        assert (next_actions.shape[1] == (self.action_size * num_agents)), 'Wrong shape of next_actions'
+        assert (next_actions.shape[1] == (self.action_size * self.num_agents)), 'Wrong shape of next_actions'
 
         Q_targets_next = self.critic_target(next_states, next_actions)
 
-        Q_target_i = reward_i + (self.gamma * Q_targets_next * (1-done_i))
+        Q_target_i = rewards_i + (self.gamma * Q_targets_next * (1-dones_i))
         Q_expected = self.critic_local(states, actions)
 
         critic_loss = F.mse_loss(Q_expected, Q_target_i)
@@ -215,8 +218,8 @@ class MADDPGAgentVersion1(BaseAgent):
         self.critic_optimizer.step()
 
         # train actor
-        actions_pred = self.get_all_actors_actions(states)
-        actor_loss = - self.critic_local(states, actions_pred).mean()
+        actions_pred = self.forward_all(states)
+        actor_loss = - self.critic_local(states, actions).mean()
 
         self.actor_optimizer.zero_grad()
         actor_loss.backward()
@@ -226,12 +229,12 @@ class MADDPGAgentVersion1(BaseAgent):
         # update critic
         self.soft_update(self.critic_local, self.critic_target, self.tau)
 
-        # update actors in agents
-        self.soft_update_actors()
+        # update actors
+        self.soft_update(self.actor_local, self.actor_target, self.tau)
         
         #------ update noise ---#
         self.epsilon = max(self.epsilon * self.epsilon_decay, self.epsilon_end)
-        self.noie.reset()
+        self.noise.reset()
             
             
     def soft_update(self, local_model, target_model, tau):
@@ -245,18 +248,10 @@ class MADDPGAgentVersion1(BaseAgent):
         for target_param, local_param in zip(target_model.parameters(), local_model.parameters()):
             target_param.data.copy_(tau * local_param.data + (1.0 - tau) * target_param.data)
       
-       
-    def soft_update_actors(self):
-        for agent in agent_list:
-            self.soft_update(agent.actor_local, agent.actor_target, self.tau)
-                                                     
-    
+
     def model_dicts(self):
-        m_dicts = {'critic': self.critic_target}
-        
-        for agent in agent_list:
-            key = 'actor_{}'.format(agent.name)
-            m_dicts[key] = agent.actor_target
+        m_dicts = {'critic_{}'.format(self.name): self.critic_target,
+                   'actor_{}'.format(self.name): self.actor_target}
         
         return m_dicts                                         
         
