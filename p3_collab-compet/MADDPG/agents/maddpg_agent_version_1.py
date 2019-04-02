@@ -5,21 +5,29 @@ import torch.optim as optim
 
 import numpy as np
 
-
 from networks.maddpg_critic_version_1 import MADDPGCriticVersion1
 from agents.base_agent import BaseAgent
+from agents.game import Game
 from utils import OUNoise
-from utils.replay_buffer import ReplayBuffer
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-""" MADDPGAgentGroup (Version 1)
+class ActionQuery()
+    """
+    Query result
+    """
+    def __init__(self):
+        self.next_actions = None
+
+
+""" 
+MADDPGAgent (Version 1)
     1. Add gradient clipping of gradient of Q-function
     2. Reset OUNoise after every calling learn()
 """
-class MADDPGAgentGroup(BaseAgent):
-    def __init__(self, agent_list, state_size, action_size, random_seed=0,
-                    lr_critic=1e-3,
+class MADDPGAgenVersion1(BaseAgent):
+    def __init__(self, game, state_size, action_size, random_seed=0,
+                    lr_critic=1e-3, lr_actor=1e-3,
                     fc1_units=400, fc2_units=300,
                     buffer_size=int(1e6), batch_size=128,
                     gamma=0.99, tau=1e-3,
@@ -27,7 +35,8 @@ class MADDPGAgentGroup(BaseAgent):
                     epsilon_start=1.0, epsilon_end=0.1, epsilon_decay=0.99):
         """Initialize an Agent object.
         Args:
-            random_seed (int): random seed
+            game (class Game): meidator in chain-of-responsibility design pattern. (Broker chain)
+            random_seed (int): random seed.
             
             max_norm (float): value of clip_grad_norm for critic optimizer
         """
@@ -50,19 +59,26 @@ class MADDPGAgentGroup(BaseAgent):
         self.epsilon_end = epsilon_end
         self.epssilon_decay = epsilon_decay
         
+        # Actor Network (w/ Target Network)
+        self.actor_local = MADDPGActorVersion1(state_size, actions_size, random_seed, 
+                                               fc1_units=fc1_units, fc2_unit=fc2_units).to(device)
+        self.actor_target = MADDPGActorVersion1(state_size, actions_size, random_seed, 
+                                                fc1_units=fc1_units, fc2_unit=fc2_units).to(device)
+        
+        self.actor_optimizer = optim.Adam(self.actor_local.parameters(), lr=lr_actor)
+        
         # Critic Network (w/ Target Network)
-        self.critic_local = MADDPGCriticVersion1(num_agents, state_size, action_size, random_seed, fcs1_units=fc1_units, fc2_units=fc2_units).to(device)
-        self.critic_target = MADDPGCriticVersion1(num_agents, state_size, action_size, random_seed, fcs1_units=fc1_units, fc2_units=fc2_units).to(device)
+        self.critic_local = MADDPGCriticVersion1(state_size, action_size, random_seed, 
+                                                 fcs1_units=fc1_units, fc2_units=fc2_units).to(device)
+        self.critic_target = MADDPGCriticVersion1(state_size, action_size, random_seed, 
+                                                  fcs1_units=fc1_units, fc2_units=fc2_units).to(device)
         
         self.critic_optimizer = optim.Adam(self.critic_local.parameters(), lr=lr_critic)
         
         # Noise process for action
         # Noise process
         self.noise = OUNoise(self.action_size, self.exploration_mu, self.exploration_theta, self.exploration_sigma)
-    
-        # Replay memory
-        self.memory = ReplayBuffer(self.action_size, buffer_size, batch_size, random_seed, device)
-        
+
         # parameter of discounted reward
         self.gamma = gamma
         
@@ -70,25 +86,18 @@ class MADDPGAgentGroup(BaseAgent):
         self.tau = tau
         
         self.batch_size = batch_size
-        
-        self.step = 0
-        
+
         
     def step(self, states, actions, rewards, next_states, dones):
         """
-            The input size of critic networks is (state_size+action_size)*num_agents
+        Args:
+            states (numpy.array): states.shape[1] = (state_size*num_agents)
+            actions (numpy.array): actions.shape[1] = (actions_size*num_agents)
+            next_states (numpy.array): next_states.shape[1] = (state_size*num_agents)
         """
-        self.memory.add(ExperiencePack(states, actions, rewards, next_states, dones).pack())
         
-        # Learn, if enough samples are available in memory
-        if (len(self.memory) > self.batch_size) and (self.step % self.learn_period) == 0:
-            for _ in range(self.learn_sampling_num);
-                self.learn()
-                
-            
-            
-        self.step += 1
-            
+        self.learn(states, actions, rewards, next_states, dones)
+
        
     def act(self, states, add_noise=True):
         """
@@ -122,24 +131,41 @@ class MADDPGAgentGroup(BaseAgent):
         self.noise.reset()
 
         
-    def get_all_actors_actions(self, states):
+    def forward_all(self, next_states):
         """
-            Return:
-                1d differentiable tensor of next_actions.
+        Get next_actions. This is a chain-of-responsibility design pattern. (Broker chain)
+        
+        Return:
+            1d differentiable tensor of next_actions.
         """
-        actions = None
-        for s, agent in zip(states, agent_list):
-            action = agent.actor_target(s)
+        q = ActionQuery()
+        
+        for i, agent in enumerate(self.game):
+            # get next_state_i of agent_i
+            n_state = next_states[i*self.state_size: (i+1)*self.state_size]
             
-            if actions is None:
-                actions = action
-            else:
-                actions = torch.cat((actions, action), dim=0)
-                
-        return actions.flatten()
-                   
+            # predict next_action and append it to actionQuery.actions
+            agent.query(n_state, q)
+            
+        return q.actions
+    
+    
+    def query(self, next_state, q):
+        """
+        Args:
+            q (class ActionQuery): parcel that stores actions
+        """
+        
+        next_action = self.actor_local(next_state)
+        
+        if q.next_actions is None:
+            q.next_actions = next_action
+        else:
+            q.next_actions = torch.cat((q.next_actions, next_action), dim=0)    
+            q.next_actions = q.next_actions.flatten()
 
-    def learn(self):
+
+    def learn(self, states, actions, rewards, next_states, dones):
         """Update policy and value parameters using given batch of experience tuples.
         For agent i:
             Q_target_i = r_i + gamma * critic_target(next_state, actor_target(next_state))
@@ -154,11 +180,6 @@ class MADDPGAgentGroup(BaseAgent):
         """
         
         for i, agent in enumerate(agent_list):
-            e = self.memory.sample()
-
-            # train critic
-            states, actions, rewards, next_states, _ = e
-            
             # divide fields update agent number i
             experience_unpacks = ExperienceUnpack(e, self.state_size, self.action_size, self.num_agents)
             # upack field in agent_i
@@ -169,12 +190,13 @@ class MADDPGAgentGroup(BaseAgent):
             assert (rewards_i.shape[1] == (1)), 'Wrong shape of rewards_i'
             assert (dones_i.shape[1] == (1)), 'Wrong shape of dones_i'
             
+            # train critic
             # loss fuction = Q_target(TD 1-step boostrapping) - Q_local(current)      
-            actions_next = self.get_all_actors_actions(next_states)
+            next_actions = self.forward_all(next_states)
             
-            assert (actions_next.shape[1] == (self.action_size * num_agents)), 'Wrong shape of actions_next'
+            assert (next_actions.shape[1] == (self.action_size * num_agents)), 'Wrong shape of next_actions'
             
-            Q_targets_next = self.critic_target(next_states, actions_next)
+            Q_targets_next = self.critic_target(next_states, next_actions)
 
             Q_target_i = reward_i + (self.gamma * Q_targets_next * (1-done_i))
             Q_expected = self.critic_local(states, actions)
