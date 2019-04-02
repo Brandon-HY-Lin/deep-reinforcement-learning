@@ -1,9 +1,16 @@
+import torch
+import numpy as np
+
+import pdb
 
 from agents.base_agent import BaseAgent
-from utils.experience_pack import ExperiencePack
+from utils.experience_pack import pack_experience
+from utils.replay_buffer import ReplayBuffer
+
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 class AgentGroup(BaseAgent):
-    def __init__(self, agent_list, buffer_size=int(1e6), batch_size=128):
+    def __init__(self, agent_list, action_size, learn_period=10, learn_sampling_num=20, buffer_size=int(1e6), batch_size=128, random_seed=0):
         super().__init__()
         
         if len(agent_list) == 0:
@@ -11,9 +18,12 @@ class AgentGroup(BaseAgent):
 
         self.agent_list = agent_list
         
+        self.learn_period = learn_period
+        self.learn_sampling_num = learn_sampling_num
+        
         self.batch_size = batch_size
         
-        self.memory = ReplayBuffer(buffer_size, batch_size)
+        self.memory = ReplayBuffer(action_size, buffer_size, batch_size, random_seed, device)
         
         self.time_step = 0
         
@@ -37,25 +47,21 @@ class AgentGroup(BaseAgent):
         
         actions = None
         
-        with torch.no_grad():
-            for s, agent in zip(states, agent_list):
-                
-                agent.actor_local.eval()
-                
-                action = agent.act(s).cpu().data.numpy()
-                
-                agent.actor_local.train()
-                
-                if add_noise:
-                    action += self.epsilon * self.noise.sampel()
-                    action = np.clip(action, -1, 1)    
-                
-                if actions is None:
-                    actions = action
-                else:
-                    actions = np.append(actions, action, axis=0)
+        for s, agent in zip(states, self.agent_list):
+            
+            action = agent.act(s)
+            
+            # expand dim from (2,) to (1, 2)
+            action = np.expand_dims(action, axis=0)
+
+            if actions is None:
+                actions = action
+            else:
+                actions = np.append(actions, action, axis=0)
               
 
+#         pdb.set_trace()
+        
         assert (actions.shape[0] == self.__debug_num_agents), 'Mismatch dim of actions.shape[0]'
         
         return actions
@@ -64,12 +70,18 @@ class AgentGroup(BaseAgent):
     def step(self, states, actions, rewards, next_states, dones):
         
         # flatten states, action, rewards, next_states, dones
-        self.memory.add(ExperiencePack(states, actions, rewards, next_states, dones).pack())
+        p = pack_experience(states, actions, rewards, next_states, dones)
+        
+#         pdb.set_trace()
+        
+        self.memory.add(*p)
         
         if (len(self.memory) > self.batch_size) and (self.time_step % self.learn_period == 0):
             for _ in range(self.learn_sampling_num):
-                for agent in agent_list:
+                for agent in self.agent_list:
 
+                    pdb.set_trace()
+                    
                     # Note: experiences.shape[0] = batch_size
                     experiences = self.memory.sample()
 

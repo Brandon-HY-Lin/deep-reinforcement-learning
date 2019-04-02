@@ -1,5 +1,5 @@
 
-class Game()
+class Game():
     def __init__(self):
         self.agent_list = []
         self.index = 0
@@ -9,14 +9,22 @@ class Game()
         self.agent_list.append(agent)
         
         
-    def __iter__(self)
+    def index_of_agent(self, agent):
+        for index, a in enumerate(self.agent_list):
+            if a == agent:
+                return index
+            
+        raise Expception('Cannot find agent which name is {}'.format(agent.name))
+        
+        
+    def __iter__(self):
         self.index = 0
         return self
     
     
     def __next__(self):
         if self.index < self.__len__():
-            agent = agent_list[self.index]
+            agent = self.agent_list[self.index]
             self.index += 1
             
             return agent

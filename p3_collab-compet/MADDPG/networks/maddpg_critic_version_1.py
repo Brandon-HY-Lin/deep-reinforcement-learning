@@ -1,10 +1,11 @@
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 from networks.network_utils import hidden_init
 
 class MADDPGCriticVersion1(nn.Module):
-    def __init__(self, num_agents, seed, state_size, action_size, fc1_units, fc2_units):
+    def __init__(self, num_agents, state_size, action_size, fcs1_units, fc2_units, seed=0):
         """Initialize parameters and build model.
         Params
         ======
@@ -24,20 +25,20 @@ class MADDPGCriticVersion1(nn.Module):
                              
         self.reset_parameters()
          
-    def reset_parameters():
+    def reset_parameters(self):
         self.fcs1.weight.data.uniform_(*hidden_init(self.fcs1))
         self.fc2.weight.data.uniform_(*hidden_init(self.fc2))
         self.fc3.weight.data.uniform_(-3e-3, 3e-3)
         
         
     def forward(self, states_1d, actions_1d):
-         """
+        """
          Build a critic (value) network that maps (state, action) pairs -> Q-values.
          
          Args:
             states_1d (torch.tensor): shape[1] = (num_agents*state_size)
             actions_1d (torch.tensor): shape[1] = (num_agents*action_size)
-         """
+        """
         xs = F.relu(self.fcs1(states_1d))
         x = torch.cat((xs, actions_1d), dim=1)
         x = F.relu(self.fc2(x))

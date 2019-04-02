@@ -1,4 +1,6 @@
 from unityagents import UnityEnvironment
+import numpy as np
+
 import pdb
 
 class UnityEnvDecorator():
@@ -24,7 +26,9 @@ class UnityEnvDecorator():
         rewards = env_info.rewards
         dones = env_info.local_done
         
-        return next_states, rewards, dones, env_info
+#         pdb.set_trace()
+        
+        return next_states, np.array(rewards), np.array(dones), env_info
 
 
     def reset(self, train_mode=True):
