@@ -9,7 +9,7 @@ from utils.replay_buffer import ReplayBuffer
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-class AgentGroup(BaseAgent):
+class AgentGroupVersion2(BaseAgent):
     def __init__(self, agent_list, action_size, learn_period=10, learn_sampling_num=20, buffer_size=int(1e6), batch_size=128, random_seed=0):
         super().__init__()
         
@@ -55,7 +55,7 @@ class AgentGroup(BaseAgent):
             action = agent.act(s)
             
             # expand dim from (2,) to (1, 2)
-            action = np.expand_dims(action, axis=0)
+#             action = np.expand_dims(action, axis=0)
 
             if actions is None:
                 actions = action
