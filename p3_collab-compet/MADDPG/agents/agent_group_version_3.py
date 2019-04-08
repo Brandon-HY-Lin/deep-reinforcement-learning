@@ -80,6 +80,8 @@ class AgentGroupVersion3(BaseAgent):
         
         self.memory.add(*p)
         
+#         pdb.set_trace()
+        
         if (len(self.memory) > self.batch_size) and (self.time_step % self.learn_period == 0):
             for _ in range(self.learn_sampling_num):
                 for agent in self.agent_list:
@@ -89,6 +91,8 @@ class AgentGroupVersion3(BaseAgent):
                     # Note: experiences.shape[0] = batch_size
                     experiences = self.memory.sample()
 
+#                     pdb.set_trace()
+                
                     agent.step(*experiences)
                     
                 # update targets in each agent.
@@ -96,6 +100,7 @@ class AgentGroupVersion3(BaseAgent):
                 for agent in self.agent_list:
                     agent.update_targets()
                     
+                pdb.set_trace()
                 
                 self.time_step += 1
                 
