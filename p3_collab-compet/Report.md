@@ -2,9 +2,10 @@
 
 [maddpg_digram]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p3_collab-compet/MADDPG/picures/maddpg_diagram.png "Diagram of MADDPG"
 
+[maddpg_ddpg_comparision]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p3_collab-compet/MADDPG/picures/maddpg_v11_ddpg_v6_v7.png "Score of MADDPG version 11, DDPG version 6, and DDPG version 7"
 
 # Abstract
-This work adopts [MADDPG](https://arxiv.org/abs/1706.02275) to play tennis game which is similar to [Unity's Tennis game](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Learning-Environment-Examples.md#tennis) and achieve a score of 2.7. Moreover, [DDPG](https://arxiv.org/abs/1509.02971) with [prioritized experience replay (PER)](https://arxiv.org/abs/1511.05952) is also implemented and achieve similar score.
+This work adopts [MADDPG](https://arxiv.org/abs/1706.02275) to play tennis game which is similar to [Unity's Tennis game](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Learning-Environment-Examples.md#tennis) and achieve a maximal score of 2.7. Its highest average score is +1.2 over 100 episodes. Beside MADDPG, [DDPG](https://arxiv.org/abs/1509.02971) with [prioritized experience replay (PER)](https://arxiv.org/abs/1511.05952) is also implemented and achieve similar score. The highest score is +2.6 and the best average score is +0.8 (over 100 episodes).
 
 # Introduction
 Two-player game where agents control rackets to bounce ball over a net. The agents must bounce ball between one another while not dropping or sending ball out of bounds. The environment contains two agent linked to a single Brain. 
@@ -38,10 +39,15 @@ Furthermore, the diagram shown below also illustrate this subtile difference. Fo
 
 
 # Results
+Three experiments are listed below. Two of them are DDPG, the other is MADDPG. DDPG version 6 and MADDPG version 11 have batch-norm at input of critic and actor netorks. The MADDPG has better result and reaches average score of +0.5 at episode 466. And its highest average score is about +1.2.
 
+
+![Diagram of MADDPG and DDPG comparison][maddpg_ddpg_comparision]
+
+*Scores of MADDPG and DDPG*
 
 # Conclusion
-In this work, 2 algorithm are implemented and both achieve good scores of over +2.5. During experiments, one key factor is noticed: the performances of both algorithms are highly influenced by the number of training steps. The more it is, the faster the score gets higher. Besides this, stability is still a big issue even if PER is applied as shown in DDPG version.
+In this work, two algorithms are implemented and both achieve good scores of over +2.5. During experiments, one key factor is noticed: the performances of both algorithms are highly influenced by the number of training steps. The more it is, the faster the score gets higher. Besides this, stability is still a big issue even if PER is applied as shown in DDPG version.
 
 
 # Future Works
@@ -58,5 +64,37 @@ Check this [link](https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/
 #### Hyper-Parameters
 
 * MADDPG
+    * state_size : 24
+    * action_size : 2
+    * lr_critic : 1e-3 (learning rate of critic using Adam optimizer)
+    * lr_actor : 1e-3  (learning rate of actor using Adam optimizer)
+    * fc1_units : 256
+    * fc2_units : 128
+    * gamma : 0.95     (discount rate of reward)
+    * tau : 1e-2       (parameter of soft update)
+    * max_norm : 1.0   (gradient clipping)
+    * epsilon_start : 5.0     (starting ratio of exploration)
+    * epsilon_end : 0.0       (ending ratio of exploration)
+    * epsilon_decay : 0.99    (decay rate of exploration)
+    * learn_period : 10       (training period)
+    * learn_sampling_num :10  (number of training in each period)
+    * buffer_size : int(1e6)
+    * batch_size : 256
+
 
 * DDPG
+    * state_size : 24
+    * action_size : 2
+    * lr_actor : 1e-3          (learning rate of actor using Adam optimizer)
+    * lr_critic : 1e-3         (learning rate of critic using Adam optimizer)
+    * fc1_units : 256
+    * fc2_units : 128
+    * buffer_size : int(1e6)
+    * learn_period : 10         (training period)
+    * learn_sampling_num : 20   (number of training in each period)
+    * batch_size : 128
+    * max_norm : 1.0            (gradient clipping)
+    * exploration_sigma : 0.2   (parameter of OU noise process)
+    * epsilon_start : 5.0       (starting ratio of exploration)
+    * epsilon_end : 0.0         (ending ratio of exploration)
+    * epsilon_decay : 0.0       (decay rate of exploration)
