@@ -156,3 +156,25 @@ The translucent line shows the raw score of every episode. The solid line shows 
 
 # Conclusion
 In this work, two high performance DDPG approaches are implement, i.e. version 6 and version 7. They all utilize PER to boost the training speed and can achieve high socre of +5.0. Furthermore, by applying batch normalization can get higher average score.
+
+
+# Appendix
+### Hyper-Parameters of Version 6 and Version 7
+
+{'state_size': 24, 
+                    'action_size': 2,
+                    'random_seed': 0,
+                    'lr_actor': 1e-3, 
+                    'lr_critic': 1e-3,
+                    'fc1_units': 256, 
+                    'fc2_units': 128,
+                    'buffer_size': int(1e6),
+                    'learn_period': 10, 
+                    'learn_sampling_num': 20,
+                    'batch_size': 128,
+                    'max_norm': 1.0,
+                    'exploration_sigma': 0.2,
+                    'epsilon_start': 5.0,
+                    'epsilon_end': 0.0,
+                    'epsilon_decay': 0.99}
+
