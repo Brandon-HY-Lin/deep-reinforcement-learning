@@ -24,7 +24,7 @@
 
 # Abstract
 
-In this work, [DDPG](https://arxiv.org/abs/1509.02971) algorithm is adopted to solve tennis game which is similar to [Unity's version](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Learning-Environment-Examples.md#tennis). Multiple methods are applied including [PER (Prioritized Experience Replay)](https://arxiv.org/abs/1511.05952) and batch normalization. The highest score is 5.1.  
+In this work, [DDPG](https://arxiv.org/abs/1509.02971) algorithm is adopted to solve tennis game which is similar to [Unity's version](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Learning-Environment-Examples.md#tennis). Multiple methods are applied including [PER (Prioritized Experience Replay)](https://arxiv.org/abs/1511.05952) and batch normalization. The highest score is 2.6.  
 
 
 # Introduction
@@ -107,7 +107,7 @@ The translucent line shows the raw score of every episode. The solid line shows 
 
 
 ### Version 6
-In order to speed up the training, the sampling number is increased from 10 to 20. The units of each layer in neural networks is increased from 64 to 128. The batch size is increased from 50 to 128. The starting value of Weight decay is changed from 1.0 to 5.0. The result is significant, the highest score is 5.1. The average score passes 0.5 at episode 397.
+In order to speed up the training, the sampling number is increased from 10 to 20. The units of each layer in neural networks is increased from 64 to 128. The batch size is increased from 50 to 128. The starting value of Weight decay is changed from 1.0 to 5.0. The result is significant, the highest score is about 2.55. The average score passes 0.5 at episode 751.
 
 Parameters:
 * Sampling number = 20
@@ -127,7 +127,7 @@ The translucent line shows the raw score of every episode. The solid line shows 
 
     
 ### Version 7
-Recall that batch normalization is not rolled back between version 4 and version 6. In order to clarify the impact of batch normalization, batch normalization is removed in this version. The highest score is 5.2 and average score passes 0.5 at episode 448.
+Recall that batch normalization is not rolled back between version 4 and version 6. In order to clarify the impact of batch normalization, batch normalization is removed in this version. The highest score is 2.6 and average score passes 0.5 at episode 490.
 
 
 ![Score of Version 7][img_ddpg_version_7]
@@ -147,7 +147,7 @@ A close look between version 1 and version 5 is listed below. Note that version 
 ![Scores of first 5 versions][img_ddpg_version_1_to_verion_5]
 
 
-To take a deep look at the impact of batch normalization, I plot the scores of version 6 and verion 7 below. Both versions achieve socres above 5.0, but version 6 (w/ BN) has higher average score around 810 episode.
+To take a deep look at the impact of batch normalization, I plot the scores of version 6 and verion 7 below. Both versions achieve socres above 2.5, but version 6 (w/ BN) has higher average score around 810 episode.
 
 ![Scores of version 6 and version 7][img_ddpg_version_6_and_version_7_with_raw_data]
 
@@ -155,26 +155,24 @@ The translucent line shows the raw score of every episode. The solid line shows 
 
 
 # Conclusion
-In this work, two high performance DDPG approaches are implement, i.e. version 6 and version 7. They all utilize PER to boost the training speed and can achieve high socre of +5.0. Furthermore, by applying batch normalization can get higher average score.
+In this work, two high performance DDPG approaches are implement, i.e. version 6 and version 7. They all utilize PER to boost the training speed and can achieve high socre of +2.5. Furthermore, by applying batch normalization can get higher average score.
 
 
 # Appendix
 ### Hyper-Parameters of Version 6 and Version 7
 
-{'state_size': 24, 
-                    'action_size': 2,
-                    'random_seed': 0,
-                    'lr_actor': 1e-3, 
-                    'lr_critic': 1e-3,
-                    'fc1_units': 256, 
-                    'fc2_units': 128,
-                    'buffer_size': int(1e6),
-                    'learn_period': 10, 
-                    'learn_sampling_num': 20,
-                    'batch_size': 128,
-                    'max_norm': 1.0,
-                    'exploration_sigma': 0.2,
-                    'epsilon_start': 5.0,
-                    'epsilon_end': 0.0,
-                    'epsilon_decay': 0.99}
-
+* state_size : 24
+* action_size : 2
+* lr_actor : 1e-3          (learning rate of actor using Adam optimizer)
+* lr_critic : 1e-3         (learning rate of critic using Adam optimizer)
+* fc1_units : 256
+* fc2_units : 128
+* buffer_size : int(1e6)
+* learn_period : 10         (training period)
+* learn_sampling_num : 20   (number of training in each period)
+* batch_size : 128
+* max_norm : 1.0            (gradient clipping)
+* exploration_sigma : 0.2   (parameter of OU noise process)
+* epsilon_start : 5.0       (starting ratio of exploration)
+* epsilon_end : 0.0         (ending ratio of exploration)
+* epsilon_decay : 0.0       (decay rate of exploration)

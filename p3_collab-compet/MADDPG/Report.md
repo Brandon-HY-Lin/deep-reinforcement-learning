@@ -22,6 +22,9 @@ Furthermore, the diagram shown below also illustrate this subtile difference. Fo
 
 *Diagram of MADDPG*
 
+The translucent line shows the raw score of every episode. The solid line shows the average score with window=100. 
+
+
 # Results
 The average score reaches +0.5 at episode 466. The highest score is 2.7 at episode 937. The stability of score is still an issue despite adding batch normalization.
 
@@ -33,8 +36,8 @@ The average score reaches +0.5 at episode 466. The highest score is 2.7 at episo
 ### Hyper-Parameters
 * state_size : 24
 * action_size : 2
-* lr_critic : 1e-3 (Adam optimizer)
-* lr_actor : 1e-3  (Adam optimizer)
+* lr_critic : 1e-3 (learning rate of critic using Adam optimizer)
+* lr_actor : 1e-3  (learning rate of actor using Adam optimizer)
 * fc1_units : 256
 * fc2_units : 128
 * gamma : 0.95     (discount rate of reward)
