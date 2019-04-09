@@ -2,6 +2,8 @@
 
 [maddpg_digram]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p3_collab-compet/MADDPG/picures/maddpg_diagram.png "Diagram of MADDPG"
 
+[img_maddpg_version_11]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p3_collab-compet/MADDPG/picures/MADDPG_version_11.png "Score of Version 2"
+
 
 # Abstract
 This work adopts [MADDPG](https://arxiv.org/abs/1706.02275) to play tennis game which is similar to [Unity's Tennis game](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Learning-Environment-Examples.md#tennis) and achieve a score of 2.6.
@@ -21,30 +23,30 @@ Furthermore, the diagram shown below also illustrate this subtile difference. Fo
 *Diagram of MADDPG*
 
 # Results
+The average score reaches +0.5 at episode 466. The highest score is 2.7 at episode 937. The stability of score is still an issue despite adding batch normalization.
+
+![Score of MADDPG version 11][img_maddpg_version_11]
 
 
 # Appendix
 
 ### Hyper-Parameters
-param_agent = {		'state_size': 24, 
-                    'action_size': 2,
-                    'random_seed': random_seed,
-                    'lr_critic': 1e-3,
-                    'lr_actor': 1e-3,
-                    'fc1_units': 256,
-                    'fc2_units': 128,
-                    'gamma': 0.95,
-                    'tau': 1e-2,
-                    'max_norm': 1.0,
-                    'epsilon_start': 5.0,
-                    'epsilon_end': 0.0,
-                    'epsilon_decay': 0.99,}
-
-                    'learn_period': 10,
-                        'learn_sampling_num':10,
-                         'buffer_size': int(1e6), 
-                         'batch_size': 256,
-                          'random_seed': random_seed}
+* state_size : 24
+* action_size : 2
+* lr_critic : 1e-3 (Adam optimizer)
+* lr_actor : 1e-3  (Adam optimizer)
+* fc1_units : 256
+* fc2_units : 128
+* gamma : 0.95     (discount rate of reward)
+* tau : 1e-2       (parameter of soft update)
+* max_norm : 1.0   (gradient clipping)
+* epsilon_start : 5.0     (starting ratio of exploration)
+* epsilon_end : 0.0       (ending ratio of exploration)
+* epsilon_decay : 0.99    (decay rate of exploration)
+* learn_period : 10       (training period)
+* learn_sampling_num :10  (number of training in each period)
+* buffer_size : int(1e6)
+* batch_size : 256
 
 
 ### Design Patterns
