@@ -42,6 +42,7 @@ The environment is considered solved, when the average (over 100 episodes) of th
 Follow the instructions in `Tennis.ipynb` to get started with training your own agent!  
 
 ### Project Layout
+```
 .
 ├── agents                   => agent family
 ├── checkpoints              => store pytorch nn.Module 
@@ -54,5 +55,5 @@ Follow the instructions in `Tennis.ipynb` to get started with training your own 
 ├── Tennis.ipynb             => Main jupyter notebook
 ├── unity_env_decorator.py   => decorator of unity environment
 └── utils                    => plotting utils and replay buffer
-
+```
 
