@@ -43,7 +43,7 @@ class AgentGroup(BaseAgent):
         Returns:
             actions (numpy.array): actions.shape[0] = num_agents.
         """
-        assert (states.shape[0] == self.__debug_num_agents), 'Mismatch dim of states.shape[0]'
+#         assert (states.shape[0] == self.__debug_num_agents), 'Mismatch dim of states.shape[0]'
         
         actions = None
         
@@ -65,8 +65,8 @@ class AgentGroup(BaseAgent):
 
 #         pdb.set_trace()
         
-        assert (actions.shape[0] == self.__debug_num_agents), 'Mismatch dim of actions.shape[0]'
-        assert (actions.shape[0] == self.__debug_action_size), 'Mismatch dim of actions.shape[0]'
+#         assert (actions.shape[0] == self.__debug_num_agents), 'Mismatch dim of actions.shape[0]'
+#         assert (actions.shape[0] == self.__debug_action_size), 'Mismatch dim of actions.shape[0]'
         
         return actions
     

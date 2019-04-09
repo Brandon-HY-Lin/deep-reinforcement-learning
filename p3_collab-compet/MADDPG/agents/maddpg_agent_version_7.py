@@ -205,7 +205,7 @@ class MADDPGAgentVersion7(BaseAgent):
             
         states_i, actions_i, rewards_i, next_states_i, dones_i = experience_unpacks[self.index_agent]
 
-        pdb.set_trace()
+#         pdb.set_trace()
 #         assert (states_i.shape[1] == (self.state_size)), 'Wrong shape of states_i'
 #         assert (actions_i.shape[1] == (self.action_size)), 'Wrong shape of actions_i'
 #         assert (rewards_i.shape[1] == (1)), 'Wrong shape of rewards_i'
@@ -215,23 +215,23 @@ class MADDPGAgentVersion7(BaseAgent):
         # loss fuction = Q_target(TD 1-step boostrapping) - Q_local(current)      
         next_actions = self.forward_all(next_states)
 
-        pdb.set_trace()
+#         pdb.set_trace()
         
-        assert (next_actions.shape[1] == (self.action_size * self.num_agents)), 'Wrong shape of next_actions'
+#         assert (next_actions.shape[1] == (self.action_size * self.num_agents)), 'Wrong shape of next_actions'
 
         Q_targets_next = self.critic_target(next_states, next_actions)
 
-        pdb.set_trace()
+#         pdb.set_trace()
         
         Q_target_i = rewards_i + (self.gamma * Q_targets_next * (1-dones_i))
         
-        pdb.set_trace()
+#         pdb.set_trace()
         
-        assert (Q_target_i.shape[1] == (1)), 'Wrong shape of Q_target_i'
+#         assert (Q_target_i.shape[1] == (1)), 'Wrong shape of Q_target_i'
         
         Q_expected = self.critic_local(states, actions)
 
-        pdb.set_trace()
+#         pdb.set_trace()
         
         critic_loss = F.mse_loss(Q_expected, Q_target_i)
 
@@ -243,11 +243,11 @@ class MADDPGAgentVersion7(BaseAgent):
         # train actor
         actions_pred = self.forward_all(states)
         
-        pdb.set_trace()
+#         pdb.set_trace()
         
         actor_loss = - self.critic_local(states, actions_pred).mean()
 
-        pdb.set_trace()
+#         pdb.set_trace()
         
         self.actor_optimizer.zero_grad()
         actor_loss.backward()
