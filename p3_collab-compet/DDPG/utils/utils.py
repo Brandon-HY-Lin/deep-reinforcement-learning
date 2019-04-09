@@ -39,7 +39,7 @@ def plot_scores(score_parcels, size_window=100, show_origin=False, alpha=1.0, ba
 def plot_scores_v2(score_parcels, size_window=100, max_len=None, 
                    show_origin=False, alpha=1.0, mode='valid', 
                    draw_vertical=False, show_episode_on_label=False,
-                  baseline=0.5, margin=200):
+                  baseline=0.5, margin=200, weight=1.0):
     
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -47,6 +47,9 @@ def plot_scores_v2(score_parcels, size_window=100, max_len=None,
     for comment, path_score, color in score_parcels:
         with open(path_score, 'rb') as f:
             scores = pickle.load(f)
+            
+            scores = np.array(scores)
+            scores *= weight
     
             if max_len is None:
                 max_len = len(scores)
