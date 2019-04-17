@@ -4,7 +4,9 @@
 [img_comparison_2000_episodes]:https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p1_navigation/figues/comparison_free_run.png "Comparison of 2,000 episodes"
 
 
-# Project 1: Navigation
+# Project: Navigation
+
+# Abstract
 
 In this project, I implement different methods to train a simple game. These methods are [DQN](https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf), [DDQN](https://arxiv.org/abs/1509.06461), and [Dueling DDQN](https://arxiv.org/abs/1511.06581). The DDQN method beats other methods and uses only 276 episodes to achieve the average reward of +13 points.
 

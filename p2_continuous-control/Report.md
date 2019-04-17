@@ -18,7 +18,7 @@
 [ounoise_sigma_02_theta_015]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p2_continuous-control/DDPG/pictures/ounoise_mu_0_sigma_02_theta_015.png "OUnoise"
 
 
-
+# Project: Reacher
 
 # Abstract
 This work adopts [DDPG](https://arxiv.org/abs/1509.02971) with [prioritized experience replay (PER)](https://arxiv.org/abs/1511.05952) to play [Unity's Reacher game](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Learning-Environment-Examples.md#reacher) and achieves good results. The stability issue of reinforcement learning is greatly reduced by PER. This work achieve average score of 30.0 at episode 24. The final average scores at episode 400 is 38.8. 
