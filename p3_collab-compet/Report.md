@@ -4,12 +4,17 @@
 
 [maddpg_ddpg_comparision]: https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p3_collab-compet/MADDPG/picures/maddpg_v11_ddpg_v6_v7.png "Score of MADDPG version 11, DDPG version 6, and DDPG version 7"
 
+[tennis_simulation_udacity]: https://raw.githubusercontent.com/Brandon-HY-Lin/deep-reinforcement-learning/master/p3_collab-compet/MADDPG/picures/tennis_simulation.gif "Tennis simulation"
+
 # Project: Tennis Game
 
 # Abstract
 This work adopts [MADDPG](https://arxiv.org/abs/1706.02275) to play tennis game which is similar to [Unity's Tennis game](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Learning-Environment-Examples.md#tennis) and achieve a maximal score of 2.7. Its highest average score is +1.2 over 100 episodes. Aside from MADDPG, [DDPG](https://arxiv.org/abs/1509.02971) with [prioritized experience replay (PER)](https://arxiv.org/abs/1511.05952) is also implemented and achieve similar score. The highest score is +2.6 and the best average score is +0.8 (over 100 episodes).
 
 # Introduction
+
+![Tennis game simulation][tennis_simulation_udacity]
+
 Two-player game where agents control rackets to bounce ball over a net. The agents must bounce ball between one another while not dropping or sending ball out of bounds. The environment contains two agent linked to a single Brain. 
 
 * Agent Reward Function (independent):
