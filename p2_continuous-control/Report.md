@@ -28,7 +28,7 @@ This work adopts [DDPG](https://arxiv.org/abs/1509.02971) with [prioritized expe
 In this project, the Unity's Reacher has been used as a testbed for DDPG algorithm. There are 20 agents in this environmet and +0.1 reward is given if agent's hand is in goal location. The maximum time step is 1,000. Hence the maximum total rewards should be +100. The sizes of observation space and action space are 33 and 4, respectively. Both spaces are continous. There are several techniques are applied including gradient clipping, batch normalization, and PER (importance sampling).
 
 
-The word 'deep' in DDPG (Deep Deterministic Policy Gradient) means that deep neural networks are used. And the word 'deterministic' means that the policy function is not a probabilistic model, i.e. if a state is observed, the next action is 100% determined. Lastly, the word 'gradient' means that the gradient accent is applied to find the maximal expected return. Note that the return comprises two parts. One is pre-defined constant reward and the other is the Q-function.  
+The word 'deep' in DDPG (Deep Deterministic Policy Gradient) means that deep neural networks are used. And the word 'deterministic' means that the policy function is not a probabilistic model, i.e. if a state is observed, the next action is 100% determined. Lastly, the word 'gradient' means that the gradient accent is applied to find the maximal expected return. Note that the return comprises two parts. One is pre-defined constant reward and the other is the Q-function. When the policy function is trained, the Q-function is treated as deterministic, too.
 
 
 # Approches
