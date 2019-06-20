@@ -3,6 +3,7 @@
 
 [img_comparison_2000_episodes]:https://github.com/Brandon-HY-Lin/deep-reinforcement-learning/blob/master/p1_navigation/figues/comparison_free_run.png "Comparison of 2,000 episodes"
 
+[nfq]: http://ml.informatik.uni-freiburg.de/former/_media/publications/rieecml05.pdf "Neural Fitted Q Iteration - First Experienceswith a Data Efficient Neural ReinforcementLearning Method, Martin Riedmiller."
 
 # Project: Navigation
 
@@ -18,6 +19,20 @@ This goal of this project is to train a framework that can play a game automatic
 ## 2. Algorithms
 The original pappers of DQN, DDQN, and Dueling DDQN are pixel-based methods. In this project, ML-agent provides an API that facillitate a directed observations of states. There are 37 states in this game. To speedup the training, I use this API instead of pixel-based approach. 
 #### 2.1 DQN (Deep Q-Networks)
+The word deep means multi-layer perceptions and CNN. However, in this project, no CNN is used because the environment doesn't output images. This algorithm originally comes from [neural fitted Q-iteration (NFQ)][nfq]. However, NFQ doesn't has experience replay buffer. The cost function is E\[ Qt(action) - Q(action)\], where Qt means the target Q-function.
+
+code snippet:
+```
+        actions_next = self.actor_target(next_states)
+        Q_targets_next = self.critic_target(next_states, actions_next)
+
+        Q_targets = rewards + (gamma * Q_targets_next * (1 -dones))
+        
+        Q_expected = self.critic_local(states, actions)
+ 
+        critic_loss = F.mse_loss(Q_expected, Q_targets)
+```
+
 In this project, DQN has 3 fully-connected layers with output shape 64, 64, and 4. Note that the size of controll space is 4 and it correspoding to the size of the last layer. It uses 396 episodes to achieve a reward of +13.
 
 
